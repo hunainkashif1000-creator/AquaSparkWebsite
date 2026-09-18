@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --cream: #fbfbf1;
+  --ink: #0e2b1c;
+  --lime: #6fa60f;
+  --lime-deep: #3f6d0c;
+  --lemon: #ffc830;
+  --lemon-deep: #e0a300;
+  --aqua: #1fa6d9;
+  --aqua-deep: #0c4a5c;
+  --line: rgba(14, 43, 28, 0.12);
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-lime: var(--lime);
+  --color-lime-deep: var(--lime-deep);
+  --color-lemon: var(--lemon);
+  --color-lemon-deep: var(--lemon-deep);
+  --color-aqua: var(--aqua);
+  --color-aqua-deep: var(--aqua-deep);
+  --color-line: var(--line);
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: auto;
+}
