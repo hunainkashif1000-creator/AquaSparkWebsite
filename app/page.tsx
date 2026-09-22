@@ -1,4 +1,5 @@
 import Features from "@/components/Features";
+import DealTicker from "@/components/DealTicker";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import HowToUse from "@/components/HowToUse";
@@ -9,6 +10,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <DealTicker />
       <ProductShowcase />
       <Features />
       <HowToUse />

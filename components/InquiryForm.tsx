@@ -4,10 +4,40 @@ import { FormEvent, useState } from "react";
 
 export default function InquiryForm() {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    setError("");
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          city: formData.get("city"),
+          phone: formData.get("phone"),
+          message: formData.get("message"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setSent(true);
+      form.reset();
+    } catch {
+      setError("We couldn't send your inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (sent) {
@@ -71,11 +101,13 @@ export default function InquiryForm() {
         />
       </label>
       <button
+        disabled={isSubmitting}
         type="submit"
-        className="mt-6 w-full rounded-full bg-lemon px-7 py-3.5 font-semibold text-ink transition-transform hover:-translate-y-0.5 sm:w-auto"
+        className="mt-6 w-full rounded-full bg-lemon px-7 py-3.5 font-semibold text-ink transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
       >
-        Send inquiry
+        {isSubmitting ? "Sending..." : "Send inquiry"}
       </button>
+      {error ? <p className="mt-4 text-sm text-lemon">{error}</p> : null}
     </form>
   );
 }

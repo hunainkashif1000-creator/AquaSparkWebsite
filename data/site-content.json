@@ -1,0 +1,59 @@
+{
+  "navigationLinks": [
+    { "id": "why", "order": 1, "href": "#why", "label": "Why it works" },
+    { "id": "how", "order": 2, "href": "#how", "label": "How to use" },
+    { "id": "buy", "order": 3, "href": "#buy", "label": "Where to buy" }
+  ],
+  "featureRows": [
+    { "id": "grease", "order": 1, "icon": "grease", "tint": "bg-lemon/25 text-lemon-deep", "eyebrow": "On contact", "title": "Grease lets go faster than you expect.", "body": "Burnt-on food and cold oil are the two things most washes struggle with. Aqua Spark's formula breaks the bond between grease and steel almost as soon as it touches — pans that usually sit soaking wipe clean the first pass." },
+    { "id": "concentrated", "order": 2, "icon": "drop", "tint": "bg-aqua/20 text-aqua-deep", "eyebrow": "Concentrated", "title": "A little drop covers a full sink.", "body": "Because the formula isn't watered down, you use less per wash than you're used to. A 250ml bottle of Aqua Spark quietly outlasts a bigger bottle of something thinner." },
+    { "id": "hands", "order": 3, "icon": "hand", "tint": "bg-lime/20 text-lime-deep", "eyebrow": "Everyday use", "title": "Tough on oil, easy on your hands.", "body": "No harsh degreasers doing the heavy lifting — just a citrus-based formula that can be part of your daily wash without leaving hands dry and tight afterward." }
+  ],
+  "usageSteps": [
+    { "id": "add-drops", "order": 1, "n": "01", "title": "Add a few drops", "body": "Straight onto your sponge, or into a sink of warm water — a little goes further than you'd think." },
+    { "id": "work-grease", "order": 2, "n": "02", "title": "Work it over the grease", "body": "No pre-soak needed. The foam lifts oil and burnt-on food as you scrub." },
+    { "id": "rinse", "order": 3, "n": "03", "title": "Rinse and you're done", "body": "Dishes come out squeaky clean, and the sink smells like fresh lemon, not chemicals." }
+  ],
+  "products": [
+    { "id": "aqua-spark-250ml", "order": 1, "name": "Aqua Spark", "size": "250ml", "description": "Concentrated dish wash with real lemon.", "image": { "src": "/images/bottle-photo.jpeg", "alt": "Aqua Spark bottle showing the label, cap, and citrus-yellow formula", "width": 520, "height": 876 } }
+  ],
+  "tickerDeals": [
+    { "id": "launch", "order": 1, "text": "Aqua Spark is now available — concentrated real-lemon dish wash", "active": true },
+    { "id": "bulk", "order": 2, "text": "Bulk and shop orders welcome", "active": true }
+  ],
+  "productCallouts": [
+    { "id": "spout", "order": 1, "n": "1", "top": "9%", "left": "52%", "title": "Easy-pour spout", "body": "A narrow cap opening so you control the drop instead of guessing the pour." },
+    { "id": "formula", "order": 2, "n": "2", "top": "34%", "left": "34%", "title": "Concentrated formula", "body": "The liquid is built strong on purpose — a few drops do what a capful of a thinner wash can't." },
+    { "id": "lemon", "order": 3, "n": "3", "top": "63%", "left": "55%", "title": "Real lemon extract", "body": "The citrus cut-through comes from actual lemon, not a fragrance sprayed on top." },
+    { "id": "grip", "order": 4, "n": "4", "top": "88%", "left": "32%", "title": "Grip-friendly body", "body": "Shaped to hold steady in a wet, soapy hand at the sink." }
+  ],
+  "siteSettings": [
+    {
+      "id": "site",
+      "hero": {
+        "video": "/video/hero-web.mp4",
+        "poster": "/images/hero-poster.jpg",
+        "eyebrow": "Aqua Spark — dish wash, made with real lemon",
+        "title": "Grease meets its match in a single drop of citrus.",
+        "body": "Aqua Spark cuts through oil and burnt-on food on contact, then rinses away clean — no soaking, no film, just the smell of fresh lemon left on the sink.",
+        "primaryCta": "See how it works",
+        "secondaryCta": "Where to buy",
+        "trustItems": [["250ml", "concentrated bottle"], ["Real lemon", "not just fragrance"], ["1 drop", "cuts grease fast"], ["Gentle", "on hands, tough on oil"]]
+      },
+      "productSection": {
+        "eyebrow": "Why it works",
+        "title": "Every part of the bottle is doing something.",
+        "body": "Aqua Spark isn't a scented rebottle of a generic wash. From the spout to the formula, it's built around one job: breaking down grease fast, without wrecking your hands."
+      },
+      "howToUse": { "eyebrow": "How to use", "title": "Three steps, one clean sink." },
+      "whereToBuy": {
+        "eyebrow": "Where to buy",
+        "title": "Get a bottle of Aqua Spark.",
+        "body": "Aqua Spark is sold locally in 250ml bottles — for home kitchens and for shops that want to stock it. Leave your details and we'll follow up to arrange yours.",
+        "details": [["Bottle size", "250ml, screw-top pour cap"], ["Bulk orders", "Available for shops and households"]]
+      },
+      "footer": { "tagline": "Aqua Spark Dish Wash — Cleaning Expert. Made with real lemon." },
+      "navigation": { "contactCta": "Get in touch" }
+    }
+  ]
+}

@@ -1,13 +1,20 @@
 import Image from "next/image";
+import { getNavigationLinks } from "@/lib/site-content";
+import { getSiteSettings } from "@/lib/site-content";
 import Container from "./Container";
 
-const links = [
+const fallbackLinks = [
   { href: "#why", label: "Why it works" },
   { href: "#how", label: "How to use" },
   { href: "#buy", label: "Where to buy" },
 ];
 
-export default function Nav() {
+export default async function Nav() {
+  const [navigationLinks, settings] = await Promise.all([
+    getNavigationLinks(),
+    getSiteSettings(),
+  ]);
+  const links = navigationLinks.length > 0 ? navigationLinks : fallbackLinks;
   return (
     <header className="absolute top-0 left-0 right-0 z-30">
       <Container className="flex items-center justify-between py-6">
@@ -41,7 +48,7 @@ export default function Nav() {
           href="#buy"
           className="rounded-full bg-lemon px-5 py-2.5 text-[15px] font-semibold text-ink shadow-sm transition-transform hover:-translate-y-0.5"
         >
-          Get in touch
+          {settings[0].navigation.contactCta}
         </a>
       </Container>
     </header>
