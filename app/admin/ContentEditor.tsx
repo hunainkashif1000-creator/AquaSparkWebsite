@@ -27,11 +27,13 @@ function MediaField({ label, value, accept, change }: { label: string; value: st
     setState("Uploading…");
     try {
       const form = new FormData(); form.append("file", file);
+      if (typeof value === "string" && value.startsWith("/api/uploads/")) form.append("current", value);
       const response = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const result = await response.json() as { url?: string; error?: string };
-      if (!response.ok || !result.url) throw new Error(result.error);
+      let result: { url?: string; error?: string } = {};
+      try { result = await response.json() as { url?: string; error?: string }; } catch { /* non-JSON platform error page */ }
+      if (!response.ok || !result.url) throw new Error(result.error || `Upload failed (HTTP ${response.status}).`);
       change(result.url); setState("Uploaded.");
-    } catch (error) { setState(error instanceof Error ? error.message : "Upload failed."); }
+    } catch (error) { setState(error instanceof Error && error.message ? error.message : "Upload failed."); }
   }
   return <div className="rounded-2xl border border-ink/10 bg-cream p-3"><Field label={`${label} URL or path`} value={value} change={change} /><label className="mt-3 block cursor-pointer rounded-xl border border-dashed border-ink/25 bg-white px-3 py-2 text-center text-sm font-semibold text-ink">{state === "Uploading…" ? state : `Upload ${label.toLowerCase()}`}<input className="sr-only" type="file" accept={accept} disabled={state === "Uploading…"} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.currentTarget.value = ""; }} /></label>{state && <p className="mt-2 text-xs text-ink/65">{state}</p>}</div>;
 }
@@ -44,12 +46,20 @@ export default function ContentEditor() {
   const edit = (next: Content) => { setContent(next); setStatus("Unsaved changes"); };
   async function save() {
     if (!content) return; setSaving(true); setStatus("Saving changes…");
-    try { const response = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(content) }); const result = await response.json() as { error?: string }; if (!response.ok) throw new Error(result.error); setStatus("Saved. Changes appear on the next website visit."); } catch (error) { setStatus(error instanceof Error ? error.message : "Save failed."); } finally { setSaving(false); }
+    try {
+      const response = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(content) });
+      let result: { success?: boolean; error?: string } = {};
+      try { result = await response.json() as { success?: boolean; error?: string }; } catch { /* non-JSON platform error page */ }
+      if (!response.ok || result.success !== true) throw new Error(result.error || `Save failed (HTTP ${response.status}). The database may be unreachable from Vercel.`);
+      setStatus("Saved. Changes appear on the next website visit.");
+    } catch (error) { setStatus(error instanceof Error && error.message ? error.message : "Save failed. See the Vercel function logs."); } finally { setSaving(false); }
   }
   if (!content) return <main className="grid min-h-screen place-items-center bg-cream p-6 text-ink">{status}</main>;
   const settings = content.siteSettings[0];
   const hero = (key: keyof Settings["hero"], value: string) => edit({ ...content, siteSettings: [{ ...settings, hero: { ...settings.hero, [key]: value } }] });
-  return <main className="min-h-screen bg-cream pb-28"><header className="border-b border-ink/10 bg-white"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5"><div><p className="font-display text-sm font-semibold text-lime-deep">Aqua Spark</p><h1 className="font-display text-3xl font-semibold text-ink">Website settings</h1></div><Link href="/" className="rounded-full border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink">View website</Link></div></header><div className="mx-auto max-w-7xl space-y-7 px-5 py-8"><div className="rounded-2xl border border-lime/20 bg-lime/10 px-4 py-3 text-sm text-ink">{status}</div>
+  const statusError = /could not|fail|error|missing|unreachable|HTTP \d/i.test(status);
+  const statusClass = statusError ? "rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700" : "rounded-2xl border border-lime/20 bg-lime/10 px-4 py-3 text-sm text-ink";
+  return <main className="min-h-screen bg-cream pb-28"><header className="border-b border-ink/10 bg-white"><div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-5"><div><p className="font-display text-sm font-semibold text-lime-deep">Aqua Spark</p><h1 className="font-display text-3xl font-semibold text-ink">Website settings</h1></div><Link href="/" className="rounded-full border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink">View website</Link></div></header><div className="mx-auto max-w-7xl space-y-7 px-5 py-8"><div className={statusClass}>{status}</div>
     <Panel title="Change hero video and image"><p className="mb-4 text-sm text-ink/60">Upload an MP4/WebM video and its poster image. You can also paste a URL or public-file path.</p><div className="grid gap-4 md:grid-cols-2"><MediaField label="Hero video" value={settings.hero.video ?? "/video/hero-web.mp4"} accept="video/mp4,video/webm" change={(value) => hero("video", value)} /><MediaField label="Hero poster image" value={settings.hero.poster ?? "/images/hero-poster.jpg"} accept="image/jpeg,image/png,image/webp,image/gif,image/avif" change={(value) => hero("poster", value)} /></div></Panel>
     <Panel title="Hero text"><div className="grid gap-4 md:grid-cols-2"><Field label="Small heading" value={settings.hero.eyebrow} change={(value) => hero("eyebrow", value)} /><Field label="Main heading" value={settings.hero.title} change={(value) => hero("title", value)} /><div className="md:col-span-2"><Field label="Description" value={settings.hero.body} change={(value) => hero("body", value)} area /></div><Field label="First button" value={settings.hero.primaryCta} change={(value) => hero("primaryCta", value)} /><Field label="Second button" value={settings.hero.secondaryCta} change={(value) => hero("secondaryCta", value)} /></div></Panel>
     <Panel title="Deals and announcement ticker"><p className="mb-4 text-sm text-ink/60">These messages scroll directly under the hero. Use them for sales, new launches, or any future deal.</p><div className="space-y-3">{content.tickerDeals.map((deal, index) => <div key={deal.id} className="grid gap-3 rounded-2xl bg-cream p-4 md:grid-cols-[1fr_auto_auto]"><Field label="Message" value={deal.text} change={(value) => edit({ ...content, tickerDeals: content.tickerDeals.map((item, i) => i === index ? { ...item, text: value } : item) })} /><label className="flex items-center gap-2 self-end pb-3 text-sm font-semibold"><input type="checkbox" checked={deal.active} onChange={(event) => edit({ ...content, tickerDeals: content.tickerDeals.map((item, i) => i === index ? { ...item, active: event.target.checked } : item) })} /> Show</label><button type="button" onClick={() => edit({ ...content, tickerDeals: content.tickerDeals.filter((_, i) => i !== index) })} className="self-end rounded-xl border border-red-200 px-3 py-2 text-sm font-semibold text-red-700">Remove</button></div>)}</div><button type="button" onClick={() => edit({ ...content, tickerDeals: [...content.tickerDeals, { id: id("deal"), order: content.tickerDeals.length + 1, text: "New offer", active: true }] })} className="mt-4 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white">Add deal or announcement</button></Panel>

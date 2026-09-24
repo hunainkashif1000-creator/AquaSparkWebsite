@@ -2,3 +2,7 @@ node_modules
 .next
 .env.local
 *.tsbuildinfo
+public/uploads/*
+!public/uploads/.gitkeep
+_docs_list*.txt
+_diagnose*
